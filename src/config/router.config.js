@@ -267,6 +267,21 @@ export const asyncRouterMap = [
             ]
           }
         ]
+      },
+
+      // 地图
+      {
+        path: '/map',
+        name: 'map',
+        component: RouteView,
+        redirect: '/map/map-display',
+        children: [
+          {
+            path: '/map/map-display',
+            name: 'MapDisplay',
+            component: () => import('@/views/map/MapDisplay')
+          }
+        ]
       }
 
       // other
@@ -331,8 +346,10 @@ export const asyncRouterMap = [
         ]
       }
       */
+
     ]
   },
+
   {
     path: '*',
     redirect: '/404',

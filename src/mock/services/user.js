@@ -851,6 +851,28 @@ const userNav = options => {
         show: false
       },
       component: 'NotificationSettings'
+    },
+    {
+      name: 'map',
+      parentId: 0,
+      id: 50,
+      meta: {
+        icon: 'dashboard',
+        title: '地图',
+        show: true
+      },
+      component: 'RouteView',
+      redirect: '/map/map-display'
+    },
+    {
+      name: 'MapDisplay',
+      parentId: 50,
+      id: 500,
+      meta: {
+        title: '地图展示',
+        show: true
+      },
+      component: 'MapDisplay'
     }
   ]
   const json = builder(nav)
