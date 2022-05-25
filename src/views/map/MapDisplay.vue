@@ -1,33 +1,33 @@
 <template>
-	<!-- <div id="mapDiv" style="position:absolute;width:100%; height:100%"></div> -->
-	<div id="mapDiv">
-		<button
-			style="position: absolute;
-			z-index: 500;
-			border: 1px solid;
-			right: 7%;
-			bottom: 10%;
-			color: red;
-			background: green;
-			padding: 10px;"
+  <div id="mapDiv">
+    <button
+      style="position: absolute;
+      z-index: 500;
+      border: 1px solid;
+      right: 7%;
+      bottom: 10%;
+      color: red;
+      background: green;
+      padding: 10px;"
       @click="positionBtn"
     >定位坐标</button>
-		<button
-			style="position: absolute;
-			z-index: 500;
-			border: 1px solid;
-			right: 7%;
-			bottom: 5%;
-			color: red;
-			background: green;
-			padding: 10px;"
-			@click="pointsBtn"
-		>添加多个点</button>
-	</div>
+    <button
+      style="position: absolute;
+      z-index: 500;
+      border: 1px solid;
+      right: 7%;
+      bottom: 5%;
+      color: red;
+      background: green;
+      padding: 10px;"
+      @click="pointsBtn"
+    >
+      添加多个点
+    </button>
+  </div>
 </template>
 
 <script>
-// import { map } from 'store/storages/all'
 const TMAP_NORMAL_MAP = 'TMAP_NORMAL_MAP' // 普通街道视图
 // const TMAP_SATELLITE_MAP = 'TMAP_SATELLITE_MAP' // 卫星视图
 const TMAP_HYBRID_MAP = 'TMAP_HYBRID_MAP' // 卫星和路网的混合视图
@@ -41,7 +41,7 @@ export default {
 		}
 	},
 	methods: {
-		onLoad () {
+		onLoad() {
 			const T = window.T // 防止报错
 			const that = this
 			const zoom = 12
@@ -62,7 +62,7 @@ export default {
 			])
       that.map.addControl(ctrl)
 		},
-		GetMaps () {
+		GetMaps() {
 			const T = window.T
 
 			// 设置显示地图的中心点和级别
@@ -90,7 +90,7 @@ export default {
 		},
 
 		// 定位用户坐标，绘制城市边界，并通过移动标点重新定位经纬度
-		positionBtn () {
+		positionBtn() {
 			const T = window.T
       const that = this
 
@@ -113,6 +113,7 @@ export default {
 
         marker.addEventListener('dragend', overlayStyle) // 添加事件监听函数。
         marker.enableDragging() // 开启标注拖拽功能
+			})
 
 			// H5定位
 			// const lo = new T.Geolocation()
@@ -132,7 +133,8 @@ export default {
 			// }
 			// lo.getCurrentPosition(fn)
 		},
-    getMap () {
+
+    getMap() {
 			const T = window.T
       const that = this
       // 创建对象
@@ -146,7 +148,7 @@ export default {
         searchWord: this.cityName // 查询行政区划的名称。
       }
       administrative.search(config, searchResult) // 方法：根据检索词发起检索，searchResult：回调参数
-      function searchResult (result) {
+      function searchResult(result) {
         if (result.getStatus() === 100) {
           const data = result.getData()
           that.showMsg(data)
@@ -156,7 +158,7 @@ export default {
       }
       // 具体内容详见AdministrativeDivisionResult类。
     },
-    showMsg (data) {
+    showMsg(data) {
       for (let i = 0; i < data.length; i++) {
         // 解释上级行政区划
         if (data[i].parents) {
@@ -186,7 +188,7 @@ export default {
         }
       }
     },
-    polygon (points) {
+    polygon(points) {
 			const T = window.T
       const that = this
       const pointsArr = []
@@ -221,7 +223,7 @@ export default {
     },
 
 		// 添加多个点，并且点击弹出信息框
-		pointsBtn () {
+		pointsBtn() {
       const that = this
 			const T = window.T
       const dataInfo = [
@@ -249,7 +251,7 @@ export default {
 				that.openInfo(content, e)
 			})
 		},
-		openInfo (content, e) {
+		openInfo(content, e) {
 			const that = this
 			const T = window.T
 			const point = e.lnglat
@@ -260,7 +262,7 @@ export default {
 			that.map.openInfoWindow(markerInfoWin, point) // 开启信息窗口
 		}
 	},
-	mounted () {
+	mounted() {
 		const T = window.T
 		const imageURL = 'http://t0.tianditu.gov.cn/img_w/wmts?' +
 			'SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles' +
