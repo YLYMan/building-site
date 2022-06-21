@@ -104,7 +104,7 @@ const vueConfig = {
 
   devServer: {
     // development server port 8000
-    port: 8000
+    port: 8000,
     // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
     // proxy: {
     //   '/api': {
@@ -113,6 +113,24 @@ const vueConfig = {
     //     changeOrigin: true
     //   }
     // }
+    proxy: {
+      [process.env.VUE_APP_API_BASE_URL]: {
+        target: 'http://192.168.1.131:9700',
+        // ws: false,
+        changeOrigin: true,
+        pathRewrite: {
+          [`^${process.env.VUE_APP_API_BASE_URL}`]: '',
+        },
+      },
+      '/weather': {
+        target: 'https://way.jd.com/jisuapi/weather',
+        // ws: false,
+        changeOrigin: true,
+        pathRewrite: {
+          ['/weather']: '',
+        },
+      },
+    }
   },
 
   // disable source map in production

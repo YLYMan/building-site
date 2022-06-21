@@ -25,13 +25,13 @@
         <a-card :loading="loading" title="人员分析" :bordered="false">
           <div class="extra-content">
             <div class="stat-item">
-              <a-statistic title="场内人数" :value="56" style="text-align: center;" />
+              <a-statistic title="场内人数" :value="56" class="statis-style" />
             </div>
             <div class="stat-item">
-              <a-statistic title="劳务人数" :value="8" style="text-align: center;" />
+              <a-statistic title="劳务人数" :value="8" class="statis-style" />
             </div>
             <div class="stat-item">
-              <a-statistic title="管理人员" :value="2223" style="text-align: center;" />
+              <a-statistic title="管理人员" :value="2223" class="statis-style" />
             </div>
           </div>
         </a-card>
@@ -44,35 +44,24 @@
         :sm="24"
         :xs="24">
         <a-card
-          title=" "
-          style="margin-bottom: 24px"
-          :bordered="false"
-          :body-style="{ padding: 0 }"
-        >
-          <div class="item-group">
-            <a>操作一</a>
-            <a>操作二</a>
-            <a>操作三</a>
-            <a>操作四</a>
-            <a>操作五</a>
-            <a>操作六</a>
-            <a-button size="small" type="primary" ghost icon="plus">添加</a-button>
-          </div>
-        </a-card>
-        <a-card
-          title="XX 指数"
+          title=""
           style="margin-bottom: 24px"
           :loading="radarLoading"
           :bordered="false"
           :body-style="{ padding: 0 }"
         >
-          <div style="min-height: 400px;">
+          <div style="min-height: 300px;">
             <!-- :scale="scale" :axis1Opts="axis1Opts" :axis2Opts="axis2Opts"  -->
-            <radar :data="radarData" />
+            <!-- <radar :data="radarData" /> -->
+            <a-carousel autoplay>
+              <div><h3>1</h3></div>
+              <div><h3>2</h3></div>
+              <div><h3>3</h3></div>
+            </a-carousel>
           </div>
         </a-card>
-        <a-card :loading="loading" title="团队" :bordered="false">
-          <div class="members">
+        <a-card :loading="loading" title="里程碑节点" :bordered="false">
+          <!-- <div class="members">
             <a-row>
               <a-col :span="12" v-for="(item, index) in teams" :key="index">
                 <a>
@@ -81,6 +70,31 @@
                 </a>
               </a-col>
             </a-row>
+          </div> -->
+          <div slot="extra">
+            计划开工日期： 2022-01-11
+            计划竣工日期： 2022-11-12
+          </div>
+          <div class="node-box">
+            <div class="node-l">
+              <a-statistic title="已施工(天)" :value="12" style="text-align: center;" />
+            </div>
+            <div class="node-c">
+              <!-- <a-timeline>
+                <a-timeline-item>Create a services site</a-timeline-item>
+                <a-timeline-item>Solve initial network problems</a-timeline-item>
+                <a-timeline-item>Technical testing</a-timeline-item>
+              </a-timeline> -->
+
+              <a-steps progress-dot :current="1">
+                <a-step title="Finished" description="" />
+                <a-step title="In Progress" description="" />
+                <a-step title="Waiting" description="" />
+              </a-steps>
+            </div>
+            <div class="node-r">
+              <a-statistic title="总工期(天)" :value="12" style="text-align: center;" />
+            </div>
           </div>
         </a-card>
       </a-col>
@@ -98,31 +112,51 @@
         >
           <a slot="extra">太原</a>
           <div class="item-group">
-            天气
+            <ul>
+              <!-- <li>
+                <div>{{ weatherInfo.now.text }}</div> <div>{{ weatherInfo.now.temperature }} ℃</div>
+              </li>
+              <li>
+                <div>风向</div>
+                <div>级</div>
+              </li>
+              <li>
+                <div>湿度</div>
+                <div>%</div>
+              </li> -->
+              <li>
+                <div><img :src="'/weatherIcon/weathercn/' + weatherInfo.img + '.png'" alt=""></div> <div>{{ weatherInfo.temp }} ℃</div>
+              </li>
+              <li>
+                <div>风向</div>
+                <div>{{ weatherInfo.windpower }} {{ weatherInfo.winddirect }}</div>
+              </li>
+              <li>
+                <div>湿度</div>
+                <div>{{ weatherInfo.humidity }}%</div>
+              </li>
+              <li>
+                <div>PM25</div>
+                <div>{{ weatherInfo.aqi.pm2_5 }}μg/m3</div>
+              </li>
+              <li>
+                <div>PM10</div>
+                <div>{{ weatherInfo.aqi.pm10 }}μg/m3</div>
+              </li>
+            </ul>
           </div>
         </a-card>
         <a-card
-          title="XX 指数"
+          title="设备统计"
           style="margin-bottom: 24px"
           :loading="radarLoading"
           :bordered="false"
           :body-style="{ padding: 0 }"
         >
-          <div style="min-height: 400px;">
+          <div style="min-height: 300px;">
             <!-- :scale="scale" :axis1Opts="axis1Opts" :axis2Opts="axis2Opts"  -->
-            <radar :data="radarData" />
-          </div>
-        </a-card>
-        <a-card :loading="loading" title="团队" :bordered="false">
-          <div class="members">
-            <a-row>
-              <a-col :span="12" v-for="(item, index) in teams" :key="index">
-                <a>
-                  <a-avatar size="small" :src="item.avatar" />
-                  <span class="member">{{ item.name }}</span>
-                </a>
-              </a-col>
-            </a-row>
+            <!-- <radar :data="radarData" /> -->
+            <a-table :columns="columns" :data-source="data"></a-table>
           </div>
         </a-card>
       </a-col>
@@ -134,17 +168,20 @@
 import { timeFix } from '@/utils/util'
 import { mapState } from 'vuex'
 import { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
-import { Radar } from '@/components'
+// import { Radar } from '@/components'
 
 import { getRoleList, getServiceList } from '@/api/manage'
 
 const DataSet = require('@antv/data-set')
 
+const city = '太原'
+const weatherSuccses = '10000'
+
 export default {
   name: 'Workplace',
   components: {
-    PageHeaderWrapper,
-    Radar
+    PageHeaderWrapper
+    // Radar
   },
   data () {
     return {
@@ -196,7 +233,33 @@ export default {
         { item: '热度', a: 60, b: 70, c: 40 },
         { item: '引用', a: 70, b: 50, c: 40 }
       ],
-      radarData: []
+      radarData: [],
+      columns: [
+        {
+          title: '设备名称',
+          dataIndex: 'name',
+          key: 'name'
+        },
+        {
+          title: '设备数量',
+          dataIndex: 'num',
+          key: 'num'
+        },
+        {
+          title: '状态(在线/离线)',
+          dataIndex: 'status',
+          key: 'status'
+        }
+      ],
+      data: [
+        {
+          key: '1',
+          name: '视频监控',
+          num: 32,
+          status: '7/8'
+        }
+      ],
+      weatherInfo: {} // 天气
     }
   },
   computed: {
@@ -231,8 +294,18 @@ export default {
     this.getActivity()
     this.getTeams()
     this.initRadar()
+    this.getWeather()
   },
   methods: {
+    getWeather() {
+      this.$http.get('/weather' + '?city=' + city + '&' + '&appkey=' + 'd2660b1d1f1dcf98cbb58c0a9ac6a7e6').then(res => {
+        console.log(res)
+        if (res.code === weatherSuccses) {
+          this.weatherInfo = res.result.result
+          console.log(this.weatherInfo)
+        }
+      })
+    },
     getProjects () {
       this.$http.get('/list/search/projects').then(res => {
         this.projects = res.result && res.result.data
@@ -269,8 +342,12 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 @import './Workplace.less';
+
+.ant-table-thead > tr > th, .ant-table-tbody > tr > td {
+  padding: 16px 10px;
+}
 
 .project-list {
   .list-box {
@@ -281,15 +358,37 @@ export default {
 }
 
 .item-group {
-  padding: 20px 0 8px 24px;
-  font-size: 0;
+  padding: 20px 20px 8px;
+  // font-size: 0;
 
-  a {
-    color: rgba(0, 0, 0, 0.65);
-    display: inline-block;
-    font-size: 14px;
-    margin-bottom: 13px;
-    width: 25%;
+  // a {
+  //   color: rgba(0, 0, 0, 0.65);
+  //   display: inline-block;
+  //   font-size: 14px;
+  //   margin-bottom: 13px;
+  //   width: 25%;
+  // }
+  ul {
+    padding-left: 0;
+    li {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 6px;
+      &:first-child {
+        margin-bottom: 12px;
+        font-size: 26px;
+        font-weight: bold;
+        color: #666666;
+      }
+      div {
+        min-width: 100px;
+        &:last-child {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
   }
 }
 

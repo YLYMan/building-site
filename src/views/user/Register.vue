@@ -7,7 +7,7 @@
           size="large"
           type="text"
           :placeholder="$t('user.register.email.placeholder')"
-          v-decorator="['email', {rules: [{ required: true, type: 'email', message: $t('user.email.required') }], validateTrigger: ['change', 'blur']}]"
+          v-decorator="['account', {rules: [{ required: true, message: $t('user.email.required') }], validateTrigger: ['change', 'blur']}]"
         ></a-input>
       </a-form-item>
 
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { getSmsCaptcha } from '@/api/login'
+import { getSmsCaptcha, register } from '@/api/login'
 import { deviceMixin } from '@/store/device-mixin'
 import { scorePassword } from '@/utils/util'
 
@@ -205,11 +205,27 @@ export default {
     },
 
     handleSubmit () {
-      const { form: { validateFields }, state, $router } = this
+      const { form: { validateFields }, state, $router, $notification } = this
+      console.log(validateFields)
       validateFields({ force: true }, (err, values) => {
+        console.log(err)
         if (!err) {
           state.passwordLevelChecked = false
-          $router.push({ name: 'registerResult', params: { ...values } })
+          console.log(values)
+          register(values).then(res => {
+            console.log(res)
+
+            $notification['success']({
+              message: '提示',
+              // description: '验证码获取成功，您的验证码为：' + res.result.captcha,
+              description: '注册成功',
+              duration: 3
+            })
+            setTimeout(() => {
+              $router.push({ name: 'registerResult', params: { ...values } })
+            }, 4000)
+          })
+          // $router.push({ name: 'registerResult', params: { ...values } })
         }
       })
     },
@@ -233,11 +249,13 @@ export default {
 
             const hide = $message.loading('验证码发送中..', 0)
 
-            getSmsCaptcha({ mobile: values.mobile }).then(res => {
+            // getSmsCaptcha({ mobile: values.mobile }).then(res => {
+            getSmsCaptcha(values.mobile).then(res => {
               setTimeout(hide, 2500)
               $notification['success']({
                 message: '提示',
-                description: '验证码获取成功，您的验证码为：' + res.result.captcha,
+                // description: '验证码获取成功，您的验证码为：' + res.result.captcha,
+                description: '验证码获取成功，您的验证码为：' + res.data,
                 duration: 8
               })
             }).catch(err => {

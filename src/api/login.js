@@ -4,9 +4,11 @@ const userApi = {
   Login: '/auth/login',
   Logout: '/auth/logout',
   ForgePassword: '/auth/forge-password',
-  Register: '/auth/register',
+  // Register: '/auth/register',
+  Register: '/auth/exempt/registered',
   twoStepCode: '/auth/2step-code',
-  SendSms: '/account/sms',
+  // SendSms: '/account/sms',
+  SendSms: '/auth/exempt/sendSms',
   SendSmsErr: '/account/sms_err',
   // get my info
   UserInfo: '/user/info',
@@ -32,10 +34,18 @@ export function login (parameter) {
   })
 }
 
+// export function getSmsCaptcha (parameter) {
+//   return request({
+//     url: userApi.SendSms,
+//     method: 'post',
+//     data: parameter
+//   })
+// }
+
 export function getSmsCaptcha (parameter) {
   return request({
-    url: userApi.SendSms,
-    method: 'post',
+    url: userApi.SendSms + '/' + parameter,
+    method: 'get',
     data: parameter
   })
 }
@@ -74,6 +84,18 @@ export function logout () {
 export function get2step (parameter) {
   return request({
     url: userApi.twoStepCode,
+    method: 'post',
+    data: parameter
+  })
+}
+
+/**
+ * 注册
+ * @param parameter {*}
+ */
+ export function register (parameter) {
+  return request({
+    url: userApi.Register,
     method: 'post',
     data: parameter
   })
